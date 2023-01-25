@@ -5,12 +5,19 @@ p{
 
 .link {
     fill: none;
-    stroke: rgb(0, 0, 0);
+    stroke: rgb(59, 59, 59);
     stroke-width: 1.5px;
   }
 
 .node {
-fill: rgb(46, 62, 153);
-stroke: rgb(46, 62, 153);
-stroke-width: 2px;
+    fill: rgb(66, 94, 250);
+    stroke: none;
+    stroke-width: none;
+}
+
+.scale{
+    stroke: rgb(59, 59, 59);
+    stroke-width: 2;
+    /* text-anchor: "middle" */
+    /* stroke-width, 0.5; */
 }

@@ -1,8 +1,8 @@
 // set the dimensions and margins of the diagram
 var margin = { top: 30, right: 90, bottom: 30, left: 90 },
-    width = 1280  - margin.left - margin.right,
-    height = 720 - margin.top - margin.bottom;
-    scale_margin = 200;
+    width = 1280   - margin.left - margin.right,
+    height = 1024  - margin.top - margin.bottom;
+    scale_margin = 5;
 
 
 // append the svg object to the body of the page
@@ -14,11 +14,21 @@ var svg = d3.select("#tree-container")
     .attr("transform", "translate("
         + margin.left + "," + margin.top + ")");
 
+
+function range(start, end, step = 1) {
+    const len = Math.floor((end - start) / step) + 1
+    return Array(len).fill().map((_, idx) => start + (idx * step))
+    }
+var scaleticks = range(0, height, height/12);
+scaleticks.unshift(0)
+scaleticks.reverse()
 // console.log(d3.select("#tree-container").node().getBoundingClientRect().width )
 
 // create the tree layout
-var tree = d3.tree()
-    .size([height, width]);
+var tree = d3.cluster()
+    .size([height, width]).separation(function(a, b) {
+        return 1; 
+     });
 
 
 d3.json("treeData.json", function (error, data) {
@@ -36,6 +46,10 @@ d3.json("treeData.json", function (error, data) {
     f2canvas = d3.scaleLinear()
         .domain([max_val, 0])
         .range([height,0])
+
+    canvas2f = d3.scaleLinear()
+        .domain([0, height])
+        .range([max_val,0])
 
 
     tree(root);
@@ -71,7 +85,7 @@ d3.json("treeData.json", function (error, data) {
 
         // add the circle to the node
         node.append("circle")
-            .attr("r", 2);
+            .attr("r", 3);
 
         node.append("g")
         .attr("class","hover-text")
@@ -103,42 +117,63 @@ d3.json("treeData.json", function (error, data) {
     
 
     // add scale bar
-    svg.append('line')
-    .style("stroke", "lightgreen")
-    .style("stroke-width", 2)
-    .attr("x1", (width - scale_margin))
-    .attr("y1", 0-margin.top)
-    .attr("x2", (width - scale_margin))
-    .attr("y2", height); 
+    var scale = svg.selectAll(".scale")
+        .data(scaleticks)
+        .enter().append("g")
+            .attr("class", "scale")
+            .attr("transform", function(d) { return "translate(" + (width + scale_margin + scale_margin) + "," + 0 + ")"; });
+
+        scale.append("path")
+            .attr("class", "scale")
+            .attr("d", function(d) {
+                return "M" + (-10) + "," + d
+                + "L" + (+10) + "," + d;
+            });
+        scale.append("text")
+            .attr("dy", ".35em")
+            .attr("y", function(d) {
+                    return  d })
+            .attr("x", (+30))
+            .text(function(d) {
+                return canvas2f(d).toFixed(2)})
+            .style("text-anchor", "middle")
+            .style("stroke-width", 0.5);
+
+        scale.append('line')
+            .attr("x1", 0)
+            .attr("y1", 0)
+            .attr("x2", 0)
+            .attr("y2", height);
+
 
     // add force points
-    console.log(root.descendants())
-    var scale_ = svg.selectAll(".scale_")
-    .data(root.descendants())
-    .enter().append("g")
-        .attr("class", function(d) { return "node" + (d.children ? " node--internal" : " node--leaf"); })
-        .attr("transform", function(d) { return "translate(" + (width - scale_margin) + "," + f2canvas(invert_f(d.data.value)) + ")"; });
+    // console.log(root.descendants())
+    // var scale_ = svg.selectAll(".scale_")
+    // .data(root.descendants())
+    // .enter().append("g")
+    //     .attr("class", function(d) { return "node" + (d.children ? " node--internal" : " node--leaf"); })
+    //     .attr("transform", function(d) { return "translate(" + (width - scale_margin) + "," + f2canvas(invert_f(d.data.value)) + ")"; });
     
-            // add the circle to the node
-            // scale_.append("circle")
-            //     .attr("r", 2);
+    //         // add the circle to the node
+    //         // scale_.append("circle")
+    //         //     .attr("r", 2);
 
-            scale_.append("path")
-            .attr("d", function(d) {
-                return "M" + (-10) + "," + d.data.value
-                + "L" + (10) + "," + d.data.value;
-            })
-            .style("stroke", "lightgreen")
-            .style("stroke-width", 2)
+    //         scale_.append("path")
+    //         .attr("d", function(d) {
+    //             return "M" + (-10) + "," + d.data.value
+    //             + "L" + (10) + "," + d.data.value;
+    //         })
+    //         .style("stroke", "lightgreen")
+    //         .style("stroke-width", 2)
 
-            // add the text to the node
-            scale_.append("text")
-            .attr("dy", ".35em")
-            .attr("y", function(d) { return d.data.value })
-            .attr("x", +50)
-            .style("text-anchor", "middle")
-            .text(function(d) { return d.data.value; })
-            .style("stroke-width", 0.5);
+    //         // add the text to the node
+    //         scale_.append("text")
+    //         .attr("dy", ".35em")
+    //         .attr("y", function(d) { return d.data.value })
+    //         .attr("x", + 50)
+    //         .text(function(d) { return d.data.value; })
+    //         .style("text-anchor", "middle")
+    //         .style("stroke-width", 0.5);
             
             
 

@@ -1,0 +1,24 @@
+{
+    "name": "root",
+    "value":2,
+    "children": [
+      {"name": "child #1",
+      "value":0,
+      "children":[
+        {"value":0}
+    ]
+    },
+      {
+        "name": "child #2",
+        "value":1,
+        "children": [
+          {"name": "grandchild #1",
+          "value":0},
+          {"name": "grandchild #2",
+          "value":0},
+          {"name": "grandchild #3",
+          "value":0}
+        ]
+      }
+    ]
+  }
