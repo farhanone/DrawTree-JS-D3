@@ -1,0 +1,16 @@
+p{
+    color:white;
+    background:green;
+}
+
+.link {
+    fill: none;
+    stroke: rgb(0, 0, 0);
+    stroke-width: 1.5px;
+  }
+
+.node {
+fill: rgb(46, 62, 153);
+stroke: rgb(46, 62, 153);
+stroke-width: 2px;
+}
