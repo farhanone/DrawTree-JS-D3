@@ -22,6 +22,12 @@ function range(start, end, step = 1) {
 var scaleticks = range(0, height, height/12);
 scaleticks.unshift(0)
 scaleticks.reverse()
+
+console.log(colorbrewer.YlGnBu[9])
+// var colorScale = d3.scale.quantize()
+//     .range(colorbrewer.YlGnBu[9])
+//     .domain([0,9]);
+
 // console.log(d3.select("#tree-container").node().getBoundingClientRect().width )
 
 // create the tree layout
@@ -30,10 +36,10 @@ var tree = d3.cluster()
         return 1; 
      });
 
+d3.json("treeData.json").then(function(data){
+// d3.json("treeData.json", function (error, data) {
 
-d3.json("treeData.json", function (error, data) {
-
-    if (error) throw error;
+//     if (error) throw error;
 
     // compute the layout of the nodes based on the data
     root = d3.hierarchy(data);
