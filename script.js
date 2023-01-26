@@ -2,7 +2,7 @@
 var margin = { top: 30, right: 90, bottom: 30, left: 90 },
     width = 1280   - margin.left - margin.right,
     height = 1024  - margin.top - margin.bottom;
-    scale_margin = 5;
+    scale_margin = 0;
 
 
 // append the svg object to the body of the page
@@ -19,16 +19,17 @@ function range(start, end, step = 1) {
     const len = Math.floor((end - start) / step) + 1
     return Array(len).fill().map((_, idx) => start + (idx * step))
     }
-var scaleticks = range(0, height, height/12);
-scaleticks.unshift(0)
-scaleticks.reverse()
+var scaleticks = range(0, height, height/10);
+console.log()
+// scaleticks.reverse()
 
-console.log(colorbrewer.YlGnBu[9])
-// var colorScale = d3.scale.quantize()
-//     .range(colorbrewer.YlGnBu[9])
-//     .domain([0,9]);
 
-// console.log(d3.select("#tree-container").node().getBoundingClientRect().width )
+
+// console.log(colorbrewer.YlGnBu[9])
+
+// qz = d3.scaleQuantize()
+//   .domain([0, 1])
+//   .range(colorbrewer.YlGnBu[9])
 
 // create the tree layout
 var tree = d3.cluster()
@@ -39,7 +40,7 @@ var tree = d3.cluster()
 d3.json("treeData.json").then(function(data){
 // d3.json("treeData.json", function (error, data) {
 
-//     if (error) throw error;
+    // if (error) throw error;
 
     // compute the layout of the nodes based on the data
     root = d3.hierarchy(data);
@@ -54,19 +55,31 @@ d3.json("treeData.json").then(function(data){
         .range([height,0])
 
     canvas2f = d3.scaleLinear()
-        .domain([0, height])
-        .range([max_val,0])
+        .domain([height, 0])
+        .range([0, max_val])
+
+        console.log(canvas2f(max_val))
+        console.log(f2canvas(canvas2f(scaleticks[0])))
+        console.log(max_val)
+    // temp_C = d3.scaleLinear()
+    //     .domain([0, max_val])
+    //     .range([0, 10])
+
+    // colors = d3.scaleQuantize()
+    // .domain([0, max_val])
+    // .range(d3.interpolate(colorbrewer.Spectral[10]))
 
 
     tree(root);
 
     var diagonal = d3.path();
-    console.log(root.descendants().slice(1))
     // create the link elements
     var link = svg.selectAll(".link")
         .data(root.descendants().slice(1))
         .enter().append("path")
         .attr("class", "link")
+        // .style("stroke", function (d) {console.log(colors(d.data.name))
+            // return colors(d.data.name) })
         .attr("d", function (d, i) {
             if (i == 0) {
                 diagonal.moveTo(d.parent.x, f2canvas(invert_f(d.parent.data.value)) - margin.top);
@@ -80,8 +93,6 @@ d3.json("treeData.json").then(function(data){
             return diagonal.toString();
         });
 
-
-
     // // create the node elements
     var node = svg.selectAll(".node")
     .data(root.descendants())
@@ -91,35 +102,43 @@ d3.json("treeData.json").then(function(data){
 
         // add the circle to the node
         node.append("circle")
-            .attr("r", 3);
+        .attr("r", 5);
+        
 
-        node.append("g")
+        
+        tooltip = svg.append("g")
         .attr("class","hover-text")
-        .append("text")
         .attr("dy", "-1em")
-        .style("opacity",0);
-        node.on("mouseover", function(d) {
-            // var numChildren = d.children ? d.children.length : 0;
-            var force = d.data.value
-            d3.select(this)
-                .select(".node-circle")
-                .style("fill", "red");
-            d3.select(this)
-                .select(".hover-text")
-                .select("text")
-                .text("Force "+force)
-                .style("opacity",1)
-                .style("stroke-width", 1);
+        .append("text")
+        .style("visibility", "hidden")
+        .style("font-size", "20px")
+        .style('font-family', 'Helvetica')
+        // .style("background-color", "white")
+        // .style("border", "solid")
+        // .style("border-width", "2px")
+        // .style("border-radius", "5px")
+        // .style("padding", "5px")
+        // .style("stroke", "black")
+        // .attr("cx", 100)
+
+        console.log(node)
+
+        node.on("mouseover", (elem, d)=> {
+            d3.select(".hover-text").select("text")
+                // // .attr("id", "tooltip")
+            .attr("x", d.x)
+            .attr("y", f2canvas(invert_f(d.data.value)))
+
+            .style("visibility", "visible")
+            .text(d.data.value.toFixed(4));
         })
-        .on("mouseout", function(d) {
-            d3.select(this)
-                .select(".node-circle")
-                .style("fill", "black");
-            d3.select(this)
-                .select(".hover-text")
-                .select("text")
-                .style("opacity",0);
+        .on("mouseout", (elem, d)=> {
+            // d3.select("#tooltip").remove();
+            d3.select(".hover-text").select("text")
+                .style("visibility", "hidden");
+
         });
+        
     
 
     // add scale bar
