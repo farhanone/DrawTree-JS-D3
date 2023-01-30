@@ -10,7 +10,7 @@ p{
   }
 
 .node {
-    fill: rgb(66, 94, 250);
+    /* fill: rgb(66, 94, 250); */
     stroke: none;
     stroke-width: none;
 }
