@@ -67,15 +67,15 @@ d3.json("treeData.json").then(function(data){
     var total_leaves = root.sum(function(d) { return d.value ? 1 : 0; });
     // var total_leaves = root.descendants().count()
     console.log(total_leaves.value)
-    d_colormap = d3.schemeSpectral[11]
+    d_colormap = d3.schemeSpectral[n_color]
     // d_colormap =colorbrewer.[n_color]
     cid2cs = d3.scaleLinear()
-        .domain([0, total_leaves.value])
+        .domain([0, total_leaves.value + 1])
         .range([0, n_color-1]);
 
 
     var colors = function(cid) {var abs_ = cid2cs(cid), c_1= Math.floor(abs_), t= abs_- Math.floor(abs_)
-        console.log(d_colormap[c_1], d_colormap[c_1 + 1],abs_)
+        // console.log(d_colormap[c_1], d_colormap[c_1 + 1],abs_)
         return d3.interpolate(d_colormap[c_1], d_colormap[c_1 + 1])(t);
         }
         // var abs_ = cid2cs(81)
