@@ -6,7 +6,7 @@ p{
 .link {
     fill: none;
     stroke: rgb(59, 59, 59);
-    stroke-width: 1.5px;
+    stroke-width: 3px;
   }
 
 .node {

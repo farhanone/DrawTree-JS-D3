@@ -2,7 +2,7 @@
 var margin = { top: 30, right: 90, bottom: 30, left: 90 },
     width = 1280   - margin.left - margin.right,
     height = 1020  - margin.top - margin.bottom;
-    scale_margin = 0;
+    scale_margin = 10;
 
 
 // append the svg object to the body of the page
@@ -42,16 +42,18 @@ var tree = d3.cluster()
         return 1; 
      });
 
-d3.json("treeData.json").then(function(data){
+d3.json("treeDataCC.json").then(function(data){
 // d3.json("treeData.json", function (error, data) {
 
     // if (error) throw error;
 
     // compute the layout of the nodes based on the data
     root = d3.hierarchy(data);
-
+    
     // Force value to canvas height
     var max_val = root.data.value
+    console.log(max_val)
+
     invert_f = d3.scaleLinear()
         .domain([0, max_val])
         .range([max_val, 0])
@@ -63,7 +65,7 @@ d3.json("treeData.json").then(function(data){
         .domain([height, 0])
         .range([0, max_val])
 
-    var n_color = 11
+    var n_color = 10
     var total_leaves = root.sum(function(d) { return d.value ? 1 : 0; });
     // var total_leaves = root.descendants().count()
     console.log(total_leaves.value)
@@ -75,7 +77,14 @@ d3.json("treeData.json").then(function(data){
 
 
     var colors = function(cid) {var abs_ = cid2cs(cid), c_1= Math.floor(abs_), t= abs_- Math.floor(abs_)
+        
         // console.log(d_colormap[c_1], d_colormap[c_1 + 1],abs_)
+        // if (cid == 5) {
+        //     // return '#cea6a6'
+        //     return '#c3b2b2'
+        //   }
+        // else{
+        // return d3.interpolate(d_colormap[c_1], d_colormap[c_1 + 1])(t);}
         return d3.interpolate(d_colormap[c_1], d_colormap[c_1 + 1])(t);
         }
         // var abs_ = cid2cs(81)
@@ -88,6 +97,7 @@ d3.json("treeData.json").then(function(data){
     var link = svg.selectAll(".link")
         .data(root.descendants().slice(1))
         .enter().append("path")
+        // .style("stroke-width", 0.9)
         .attr("class", "link")
         // .style("stroke", function (d) {console.log(colors(d.data.name))
             // return colors(d.data.name) })
@@ -158,11 +168,11 @@ d3.json("treeData.json").then(function(data){
 
         // add the circle to the node
         svg.selectAll(".node--internal").append("circle")
-        .attr("r", 5)
+        .attr("r", 10)
         .style("fill", function(d){ 
             return colors(d.data.name)})
         svg.selectAll(".node--leaf").append("circle")
-        .attr("r", 3)
+        .attr("r", 10)
         .style("fill", function(d){ 
             return colors(d.data.name)})
 
@@ -177,7 +187,7 @@ d3.json("treeData.json").then(function(data){
         .data(scaleticks)
         .enter().append("g")
             .attr("class", "scale")
-            .attr("transform", function(d) { return "translate(" + (width + scale_margin + scale_margin) + "," + 0 + ")"; });
+            .attr("transform", function(d) { return "translate(" + (width - 10*scale_margin) + "," + 0 + ")"; });
 
         scale.append("path")
             .attr("class", "scale")
@@ -189,11 +199,12 @@ d3.json("treeData.json").then(function(data){
             .attr("dy", ".35em")
             .attr("y", function(d) {
                     return  d })
-            .attr("x", (+30))
+            .attr("x", (+50))
             .text(function(d) {
                 return canvas2f(d).toFixed(2)})
             .style("text-anchor", "middle")
-            .style("stroke-width", 0.5);
+            .style("stroke-width", 0.5)
+            .style("font-size", "2em");
 
         scale.append('line')
             .attr("x1", 0)
