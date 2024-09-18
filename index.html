@@ -15,6 +15,7 @@
 
 </head>
 <body>
+
 <!-- <script>
 var threshold = 0.1;
 inviwo.getProperty("ExtractCycles2.filtVal", function(prop) {
@@ -23,7 +24,10 @@ inviwo.getProperty("ExtractCycles2.filtVal", function(prop) {
 </script> -->
 
     <h1>Tree Structure </h1>
-    <!-- <p>This is a paragraph.</p> -->
+
+    <label for="Threshold">Set Threshold:</label>
+    <input type="number" id="InputThreshold" name="Threshold" value="0.1" oninput="thresholdChanged()"/>
+
     <div id="tree-container"></div>
     <div id="tooltip"></div>
     <script src="./script.js"></script>
