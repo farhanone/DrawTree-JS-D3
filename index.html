@@ -5,14 +5,42 @@
     <link rel="stylesheet" href="./style.css">
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://d3js.org/colorbrewer.v1.min.js"></script>
+
+
+    <!-- <script src="inviwo://webbrowser/data/js/inviwoapi.js"></script>
+    <script language="JavaScript">
+        var inviwo = new InviwoAPI();
+    </script> -->
+
+
 </head>
 <body>
+<!-- <script>
+var threshold = 0.1;
+inviwo.getProperty("ExtractCycles2.filtVal", function(prop) {
+    threshold = prop.value;
+})
+</script> -->
+
     <h1>Tree Structure </h1>
     <!-- <p>This is a paragraph.</p> -->
     <div id="tree-container"></div>
     <div id="tooltip"></div>
-    
     <script src="./script.js"></script>
     <div class="render"></div>
 </body>
 </html>
+
+<!-- <script id="filtration">
+
+function thresholdChanged(prop) {
+    threshold = prop.value;
+    var line = document.getElementById("threshold");
+    if (line) {
+        var y =  heightScale(threshold) + margin.top
+        line.setAttribute("y1", y)
+        line.setAttribute("y2", y)
+    }
+}
+inviwo.subscribe("ExtractCycles2.filtVal", thresholdChanged) -->
+</script>
