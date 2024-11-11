@@ -23,6 +23,8 @@ var tree = d3.cluster()
 
 d3.json("treeData.json").then(function (data) {
 
+    
+
     // compute the layout of the nodes based on the data
     root = d3.hierarchy(data);
     console.log(root)
@@ -103,7 +105,7 @@ d3.json("treeData.json").then(function (data) {
 
     // Add a vertical scale on the right side
     const scaleContainer = svg.append("g")
-        .attr("transform", `translate(${width - margin.right + 10}, 0)`);  // Position scale on the right
+        .attr("transform", `translate(${width - margin.right}, 0)`);  // Position scale on the right
 
     // Draw the scale line
     scaleContainer.append("line")
@@ -130,8 +132,8 @@ d3.json("treeData.json").then(function (data) {
     .attr("y1", data2Canvas(threshold) + margin.top)
     .attr("x2", width)
     .attr("y2", data2Canvas(threshold) + margin.top)
-    .style("stroke", "red")
-    .style("stroke-width", "2")
+    // .style("stroke", "red")
+    // .style("stroke-width", "2")
     .style("cursor", "move")
     .call(drag);  // Add drag functionality if required
 
